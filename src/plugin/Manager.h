@@ -5,12 +5,14 @@
 #include <utility>
 #include <map>
 #include <string_view>
-
+#include <vector>
 
 #include "Plugin.h"
 #include "Component.h"
 
 #include "../Reporter.h"
+
+template <class T> class IntrusivePtr;
 
 namespace plugin {
 
@@ -253,7 +255,7 @@ public:
 	 * functions and events, it may be any Val and must be ignored). If no
 	 * plugin handled the call, the method returns null.
 	 */
-	std::pair<bool, Val*> HookCallFunction(const Func* func, Frame *parent, val_list* args) const;
+	std::pair<bool, Val*> HookCallFunction(const Func* func, Frame* parent, const std::vector<IntrusivePtr<Val>>& args) const;
 
 	/**
 	 * Hook that filters the queuing of an event.

@@ -8,16 +8,12 @@
 #include "Flare.h"
 
 class EventMgr;
+template <class T> class IntrusivePtr;
 
-// We don't Unref() the individual arguments by using delete_vals()
-// in a dtor because Func::Call already does that.
+// TODO: no need to derive from BroObj ?
 class Event : public BroObj {
 public:
-	Event(EventHandlerPtr handler, val_list args,
-		SourceID src = SOURCE_LOCAL, analyzer::ID aid = 0,
-		TimerMgr* mgr = 0, BroObj* obj = 0);
-
-	Event(EventHandlerPtr handler, val_list* args,
+	Event(EventHandlerPtr handler, std::vector<IntrusivePtr<Val>> args,
 		SourceID src = SOURCE_LOCAL, analyzer::ID aid = 0,
 		TimerMgr* mgr = 0, BroObj* obj = 0);
 
@@ -28,7 +24,7 @@ public:
 	analyzer::ID Analyzer() const	{ return aid; }
 	TimerMgr* Mgr() const		{ return mgr; }
 	EventHandlerPtr Handler() const	{ return handler; }
-	const val_list* Args() const	{ return &args; }
+	const std::vector<IntrusivePtr<Val>>& Args() const	{ return args; }
 
 	void Describe(ODesc* d) const override;
 
@@ -40,7 +36,7 @@ protected:
 	void Dispatch(bool no_remote = false);
 
 	EventHandlerPtr handler;
-	val_list args;
+	std::vector<IntrusivePtr<Val>> args;
 	SourceID src;
 	analyzer::ID aid;
 	TimerMgr* mgr;
@@ -64,12 +60,11 @@ public:
 	// against the case where there's no handlers (one usually also does that
 	// because it would be a waste of effort to construct all the event
 	// arguments when there's no handlers to consume them).
+	// TODO: deprecate
+	/* [[deprecated("Remove in v4.1.  Use IntrusivePtr overload instead.")]] */
 	void QueueEventFast(const EventHandlerPtr &h, val_list vl,
 			SourceID src = SOURCE_LOCAL, analyzer::ID aid = 0,
-			TimerMgr* mgr = 0, BroObj* obj = 0)
-		{
-		QueueEvent(new Event(h, std::move(vl), src, aid, mgr, obj));
-		}
+			TimerMgr* mgr = 0, BroObj* obj = 0);
 
 	// Queues an event if there's an event handler (or remote consumer).  This
 	// function always takes ownership of decrementing the reference count of
@@ -77,6 +72,8 @@ public:
 	// checked for event handler existence, you may wish to call
 	// QueueEventFast() instead of this function to prevent the redundant
 	// existence check.
+	// TODO: deprecate
+	/* [[deprecated("Remove in v4.1.  Use IntrusivePtr overload instead.")]] */
 	void QueueEvent(const EventHandlerPtr &h, val_list vl,
 			SourceID src = SOURCE_LOCAL, analyzer::ID aid = 0,
 			TimerMgr* mgr = 0, BroObj* obj = 0);
@@ -85,13 +82,23 @@ public:
 	// pointer instead of by value.  This function takes ownership of the
 	// memory pointed to by 'vl' as well as decrementing the reference count of
 	// each of its elements.
+	// TODO: deprecate
+	/* [[deprecated("Remove in v4.1.  Use IntrusivePtr overload instead.")]] */
 	void QueueEvent(const EventHandlerPtr &h, val_list* vl,
 			SourceID src = SOURCE_LOCAL, analyzer::ID aid = 0,
-			TimerMgr* mgr = 0, BroObj* obj = 0)
-		{
-		QueueEvent(h, std::move(*vl), src, aid, mgr, obj);
-		delete vl;
-		}
+			TimerMgr* mgr = 0, BroObj* obj = 0);
+
+	// TODO: comments
+	void QueueUncheckedEvent(const EventHandlerPtr &h,
+	                         std::vector<IntrusivePtr<Val>> vl,
+	                         SourceID src = SOURCE_LOCAL, analyzer::ID aid = 0,
+	                         TimerMgr* mgr = nullptr, BroObj* obj = nullptr);
+
+	// TODO: comments
+	void QueueCheckedEvent(const EventHandlerPtr &h,
+	                       std::vector<IntrusivePtr<Val>> vl,
+	                       SourceID src = SOURCE_LOCAL, analyzer::ID aid = 0,
+	                       TimerMgr* mgr = nullptr, BroObj* obj = nullptr);
 
 	void Dispatch(Event* event, bool no_remote = false);
 

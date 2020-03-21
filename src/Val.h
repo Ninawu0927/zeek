@@ -1042,7 +1042,10 @@ extern IntrusivePtr<Val> check_and_promote(IntrusivePtr<Val> v,
 extern int same_val(const Val* v1, const Val* v2);
 extern int same_atomic_val(const Val* v1, const Val* v2);
 extern bool is_atomic_val(const Val* v);
+// TODO: remove val_list overload ?
 extern void describe_vals(const val_list* vals, ODesc* d, int offset=0);
+extern void describe_vals(const std::vector<IntrusivePtr<Val>>& vals,
+                          ODesc* d, size_t offset = 0);
 extern void delete_vals(val_list* vals);
 
 // True if the given Val* has a vector type.

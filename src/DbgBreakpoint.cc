@@ -354,8 +354,8 @@ void DbgBreakpoint::PrintHitMsg()
 		Frame* f = g_frame_stack.back();
 		const BroFunc* func = f->GetFunction();
 
-		if ( func )
-			func->DescribeDebug (&d, f->GetFuncArgs());
+		if ( func && f->GetFuncArgs() )
+			func->DescribeDebug (&d, *f->GetFuncArgs());
 
 		const Location* loc = at_stmt->GetLocationInfo();
 

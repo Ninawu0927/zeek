@@ -238,6 +238,18 @@ IntrusivePtr<Val> MD5Val::DoClone(CloneState* state)
 
 void MD5Val::digest(val_list& vlist, u_char result[MD5_DIGEST_LENGTH])
 	{
+	std::vector<IntrusivePtr<Val>> vl;
+	vl.reserve(vlist.length());
+
+	for ( const auto& v : vlist )
+		vl.emplace_back(NewRef{}, v);
+
+	digest(vl, result);
+	}
+
+void MD5Val::digest(const std::vector<IntrusivePtr<Val>>& vlist,
+                    u_char result[MD5_DIGEST_LENGTH])
+	{
 	EVP_MD_CTX* h = hash_init(Hash_MD5);
 
 	for ( const auto& v : vlist )
@@ -259,6 +271,19 @@ void MD5Val::digest(val_list& vlist, u_char result[MD5_DIGEST_LENGTH])
 	}
 
 void MD5Val::hmac(val_list& vlist,
+                  u_char key[MD5_DIGEST_LENGTH],
+                  u_char result[MD5_DIGEST_LENGTH])
+    {
+	std::vector<IntrusivePtr<Val>> vl;
+	vl.reserve(vlist.length());
+
+	for ( const auto& v : vlist )
+		vl.emplace_back(NewRef{}, v);
+
+	hmac(vl, key, result);
+    }
+
+void MD5Val::hmac(const std::vector<IntrusivePtr<Val>>& vlist,
                   u_char key[MD5_DIGEST_LENGTH],
                   u_char result[MD5_DIGEST_LENGTH])
 	{
@@ -390,6 +415,18 @@ IntrusivePtr<Val> SHA1Val::DoClone(CloneState* state)
 	}
 
 void SHA1Val::digest(val_list& vlist, u_char result[SHA_DIGEST_LENGTH])
+	{
+	std::vector<IntrusivePtr<Val>> vl;
+	vl.reserve(vlist.length());
+
+	for ( const auto& v : vlist )
+		vl.emplace_back(NewRef{}, v);
+
+	digest(vl, result);
+	}
+
+void SHA1Val::digest(const std::vector<IntrusivePtr<Val>>& vlist,
+                     u_char result[SHA_DIGEST_LENGTH])
 	{
 	EVP_MD_CTX* h = hash_init(Hash_SHA1);
 
@@ -536,6 +573,18 @@ IntrusivePtr<Val> SHA256Val::DoClone(CloneState* state)
 	}
 
 void SHA256Val::digest(val_list& vlist, u_char result[SHA256_DIGEST_LENGTH])
+	{
+	std::vector<IntrusivePtr<Val>> vl;
+	vl.reserve(vlist.length());
+
+	for ( const auto& v : vlist )
+		vl.emplace_back(NewRef{}, v);
+
+	digest(vl, result);
+	}
+
+void SHA256Val::digest(const std::vector<IntrusivePtr<Val>>& vlist,
+                       u_char result[SHA256_DIGEST_LENGTH])
 	{
 	EVP_MD_CTX* h = hash_init(Hash_SHA256);
 

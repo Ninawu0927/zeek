@@ -28,7 +28,8 @@ public:
 	 * @param func the function that is creating this frame
 	 * @param fn_args the arguments being passed to that function.
 	 */
-	Frame(int size, const BroFunc* func, const val_list *fn_args);
+	Frame(int size, const BroFunc* func,
+		  const std::vector<IntrusivePtr<Val>>* fn_args);
 
 	/**
 	 * Deletes the frame. Unrefs its trigger, the values that it
@@ -100,7 +101,7 @@ public:
 	 * @return the arguments passed to the function that this frame
 	 * is associated with.
 	 */
-	const val_list* GetFuncArgs() const	{ return func_args; }
+	const std::vector<IntrusivePtr<Val>>* GetFuncArgs() const	{ return func_args; }
 
 	/**
 	 * Change the function that the frame is associated with.
@@ -283,7 +284,7 @@ private:
 	/** The function this frame is associated with. */
 	const BroFunc* function;
 	/** The arguments to the function that this Frame is associated with. */
-	const val_list* func_args;
+	const std::vector<IntrusivePtr<Val>>* func_args;
 
 	/** The next statement to be evaluted in the context of this frame. */
 	Stmt* next_stmt;

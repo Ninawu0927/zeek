@@ -732,8 +732,8 @@ string get_context_description(const Stmt* stmt, const Frame* frame)
 	ODesc d;
 	const BroFunc* func = frame ? frame->GetFunction() : 0;
 
-	if ( func )
-		func->DescribeDebug(&d, frame->GetFuncArgs());
+	if ( func && frame->GetFuncArgs() )
+		func->DescribeDebug(&d, *frame->GetFuncArgs());
 	else
 		d.Add("<unknown function>", 0);
 

@@ -182,11 +182,18 @@ private:
 
 class MD5Val : public HashVal {
 public:
+	// TODO: deprecate
 	static void digest(val_list& vlist, u_char result[MD5_DIGEST_LENGTH]);
+	static void digest(const std::vector<IntrusivePtr<Val>>& vlist,
+	                   u_char result[MD5_DIGEST_LENGTH]);
 
+	// TODO: deprecate
 	static void hmac(val_list& vlist,
 			 u_char key[MD5_DIGEST_LENGTH],
 			 u_char result[MD5_DIGEST_LENGTH]);
+	static void hmac(const std::vector<IntrusivePtr<Val>>& vlist,
+	                 u_char key[MD5_DIGEST_LENGTH],
+	                 u_char result[MD5_DIGEST_LENGTH]);
 
 	MD5Val();
 	~MD5Val();
@@ -207,7 +214,9 @@ private:
 
 class SHA1Val : public HashVal {
 public:
+	// TODO: deprecate
 	static void digest(val_list& vlist, u_char result[SHA_DIGEST_LENGTH]);
+	static void digest(const std::vector<IntrusivePtr<Val>>& vlist, u_char result[SHA_DIGEST_LENGTH]);
 
 	SHA1Val();
 	~SHA1Val();
@@ -228,7 +237,9 @@ private:
 
 class SHA256Val : public HashVal {
 public:
+	// TODO: deprecate
 	static void digest(val_list& vlist, u_char result[SHA256_DIGEST_LENGTH]);
+	static void digest(const std::vector<IntrusivePtr<Val>>& vlist, u_char result[SHA256_DIGEST_LENGTH]);
 
 	SHA256Val();
 	~SHA256Val();

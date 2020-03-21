@@ -14,7 +14,8 @@
 
 vector<Frame*> g_frame_stack;
 
-Frame::Frame(int arg_size, const BroFunc* func, const val_list* fn_args)
+Frame::Frame(int arg_size, const BroFunc* func,
+             const std::vector<IntrusivePtr<Val>>* fn_args)
 	{
 	size = arg_size;
 	frame = new Val*[size];
